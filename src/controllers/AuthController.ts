@@ -7,6 +7,7 @@ export class AuthController {
   private userService: UserService;
 
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.userService = null as any;
   }
   public async signup(request: NextRequest): Promise<NextResponse> {
@@ -26,7 +27,7 @@ export class AuthController {
 
       const result = await this.userService.create(body);
       
-      const { password, ...userWithoutPassword } = result;
+      const { password: _, ...userWithoutPassword } = result;
       
       return NextResponse.json(
         ApiResponseBuilder.success(userWithoutPassword, 'User registered successfully')
@@ -41,7 +42,7 @@ export class AuthController {
   }
 
 
-  public async getProfile(request: NextRequest, session: any): Promise<NextResponse> {
+  public async getProfile(request: NextRequest, session: { user?: { id: string } } | null): Promise<NextResponse> {
     try {
       await dbConnection.connect();
       
@@ -63,7 +64,7 @@ export class AuthController {
         );
       }
 
-      const { password, ...userWithoutPassword } = user;
+      const { password: _, ...userWithoutPassword } = user;
       
       return NextResponse.json(
         ApiResponseBuilder.success(userWithoutPassword, 'User profile retrieved successfully')

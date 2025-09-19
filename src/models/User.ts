@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany, ManyToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { BaseEntity } from './BaseEntity';
 import { Role } from './Role';
 
@@ -30,8 +30,10 @@ export class User extends BaseEntity {
   roleId?: number;
 
   @OneToMany('Message', 'user')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   messages: any[];
 
   @OneToMany('Conversation', 'user')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   conversations: any[];
 }

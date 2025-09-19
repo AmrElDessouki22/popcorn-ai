@@ -19,10 +19,10 @@ export function UserMenu() {
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className={styles.userAvatar}>
-          {session?.user?.firstName?.[0] || 'U'}
+          {session?.user?.name?.[0] || 'U'}
         </div>
         <span className={styles.userName}>
-          {session?.user?.firstName || 'User'}
+          {session?.user?.name || 'User'}
         </span>
         <svg 
           className={`${styles.chevronIcon} ${isOpen ? styles.chevronIconOpen : ''}`}
@@ -38,11 +38,11 @@ export function UserMenu() {
         <div className={styles.userDropdown}>
           <div className={styles.userInfo}>
             <div className={styles.userInfoAvatar}>
-              {session?.user?.firstName?.[0] || 'U'}
+              {session?.user?.name?.[0] || 'U'}
             </div>
             <div className={styles.userInfoDetails}>
               <p className={styles.userInfoName}>
-                {session?.user?.firstName} {session?.user?.lastName}
+                {session?.user?.name} {session?.user?.name}
               </p>
               <p className={styles.userInfoEmail}>
                 {session?.user?.email}

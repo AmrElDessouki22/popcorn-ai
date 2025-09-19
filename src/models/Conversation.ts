@@ -24,5 +24,6 @@ export class Conversation extends BaseEntity {
   userId: number;
 
   @OneToMany('Message', 'conversation')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   messages: any[];
 }

@@ -49,6 +49,7 @@ export const authOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
@@ -78,6 +79,7 @@ export const authOptions = {
       
       return token;
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, token }: any) {
       if (token) {
         session.user.id = token.id as string;
@@ -91,7 +93,7 @@ export const authOptions = {
       
       return session;
     },
-    async redirect({ url, baseUrl }: any) {
+    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       if (new URL(url).origin === baseUrl) return url;
       return baseUrl + "/dashboard";

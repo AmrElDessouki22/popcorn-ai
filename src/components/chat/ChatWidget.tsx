@@ -9,7 +9,19 @@ interface Message {
   sender: 'user' | 'ai';
   timestamp: Date;
   type?: 'text' | 'loading' | 'carousel';
-  richContent?: any;
+  richContent?: {
+    type: string;
+    products?: Array<{
+      id: number;
+      name: string;
+      description: string;
+      price: number;
+      imageUrl?: string;
+      category: string;
+      inStock: boolean;
+      tags?: string;
+    }>;
+  };
 }
 
 interface ChatWidgetProps {
@@ -127,7 +139,16 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+    inStock: boolean;
+    tags?: string;
+  }) => {
     console.log('Adding to cart:', product);
   };
 
@@ -180,7 +201,7 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
                   {/* Rich Content Display */}
                   {message.richContent && message.type === 'carousel' && (
                     <div className={styles.carouselContainer}>
-                      {message.richContent.products?.map((product: any) => (
+                      {message.richContent.products?.map((product) => (
                         <div key={product.id} className={styles.productCard}>
                           <img 
                             src={product.imageUrl} 

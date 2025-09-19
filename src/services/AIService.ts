@@ -8,19 +8,28 @@ export class AIService {
   private productService: ProductService;
   private messageService: MessageService;
 
+  
   constructor() {
+    console.log('process.env.OPENAI_API_KEY :: ',process.env.OPENAI_API_KEY)
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.productService = null as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.messageService = null as any;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async generateResponse(
     userMessage: string, 
     conversationId: number, 
     userId: number
-  ): Promise<{ message: string; richContent?: any; type?: string }> {
+  ): Promise<{ 
+    message: string; 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    richContent?: any; 
+    type?: string }> {
     try {
       this.productService = new ProductService();
       this.messageService = new MessageService();
@@ -82,15 +91,17 @@ export class AIService {
     }
   }
 
-  /**
-   * Handle OpenAI function calls
-   */
   private async handleFunctionCall(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     functionCall: any, 
     userMessage: string, 
     conversationId: number, 
     userId: number
-  ): Promise<{ message: string; richContent?: any; type?: string }> {
+  ): Promise<{ 
+    message: string; 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    richContent?: any; 
+    type?: string }> {
     const { name, arguments: args } = functionCall;
     const parsedArgs = JSON.parse(args);
 
@@ -105,15 +116,16 @@ export class AIService {
     }
   }
 
-  /**
-   * Search products based on user query and return them directly
-   */
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async searchProducts(
     ids: string[],
     userMessage: string, 
     conversationId: number, 
     userId: number
-  ): Promise<{ message: string; richContent?: any; type?: string }> {
+  ): Promise<{ message: string; 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    richContent?: any;
+     type?: string }> {
     try {
       const products = await this.productService.searchProducts(ids);
       
@@ -167,9 +179,7 @@ export class AIService {
     }
   }
 
-  /**
-   * Get conversation history for context
-   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async getConversationHistory(conversationId: number): Promise<any[]> {
     try {
       const messages = await this.messageService.findByConversationId(conversationId);

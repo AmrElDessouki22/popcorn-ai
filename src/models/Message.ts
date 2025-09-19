@@ -42,6 +42,7 @@ export class Message extends BaseEntity {
   senderAvatar?: string;
 
   @Column('json', { nullable: true })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   richContent?: any; 
 
   @Column({ nullable: true })
@@ -52,6 +53,7 @@ export class Message extends BaseEntity {
 
   @ManyToOne('Conversation', 'messages')
   @JoinColumn({ name: 'conversationId' })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   conversation: any;
 
   @Column()
@@ -96,7 +98,8 @@ export class Message extends BaseEntity {
     return this.type === 'action_buttons' || this.templateType === 'action_buttons';
   }
 
-  public getRichContent(): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public getRichContent(): any| null {
     if (typeof this.richContent === 'string') {
       try {
         return JSON.parse(this.richContent);
@@ -107,7 +110,7 @@ export class Message extends BaseEntity {
     }
     return this.richContent;
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public getMetadata(): any {
     if (this.metadata) {
       try {
