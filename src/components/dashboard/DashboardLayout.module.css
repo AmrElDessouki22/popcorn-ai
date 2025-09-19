@@ -1,0 +1,32 @@
+.dashboardLayout {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboardContent {
+  display: flex;
+  flex: 1;
+  gap: 0;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background: transparent;
+  margin-left: 280px; /* Sidebar width */
+  min-height: calc(100vh - 80px); /* Header height */
+}
+
+@media (max-width: 768px) {
+  .dashboardContent {
+    flex-direction: column;
+  }
+  
+  .mainContent {
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
