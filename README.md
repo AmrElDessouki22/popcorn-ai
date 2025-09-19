@@ -12,6 +12,8 @@ You will find the diagrams (ERD and Sequence diagrams) under the `diagrams` fold
 
 To try the project, please visit: [http://64.227.120.10/](http://64.227.120.10/)
 
+**⚠️ Note:** The demo host will be available for 48 hours and will then be stopped.
+
 ## User Authentication
 
 ### Create New User
@@ -28,7 +30,28 @@ Or use the provided test account:
 
 ## Products
 
-The products section is currently empty and will be updated later.
+The application includes a variety of products across different categories:
+
+### Clothes (5 items)
+- **Classic White T-Shirt** - $19.99 - Comfortable cotton t-shirt perfect for everyday wear
+- **Denim Jeans** - $59.99 - High-quality denim jeans with perfect fit
+- **Winter Jacket** - $89.99 - Warm and stylish winter jacket for cold weather
+- **Running Sneakers** - $79.99 - Comfortable running shoes for sports and daily activities
+- **Summer Dress** - $49.99 - Elegant summer dress perfect for warm weather
+
+### Laptops (5 items)
+- **MacBook Pro 16"** - $2,499.99 - Powerful laptop with M2 chip for professionals
+- **Dell XPS 13** - $1,299.99 - Ultra-thin laptop with stunning display
+- **HP Pavilion Gaming** - $999.99 - Gaming laptop with high-performance graphics
+- **Lenovo ThinkPad X1** - $1,599.99 - Business laptop with excellent keyboard and durability
+- **ASUS ZenBook 14** - $1,199.99 - Sleek and lightweight laptop for productivity
+
+### Drinks (5 items)
+- **Premium Coffee Beans** - $24.99 - High-quality arabica coffee beans from Colombia
+- **Green Tea Collection** - $18.99 - Organic green tea with health benefits
+- **Energy Drink Mix** - $14.99 - Natural energy drink powder with vitamins
+- **Sparkling Water** - $8.99 - Refreshing sparkling water with natural flavors
+- **Protein Shake** - $19.99 - Chocolate protein shake for fitness enthusiasts
 
 ## Technology Stack
 
