@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popcorn E-commerce - Application Flow Sequence Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        .diagram-container {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+            overflow-x: auto;
+        }
+        .flow-description {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #27ae60;
+            border-radius: 4px;
+        }
+        .flow-description h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .flow-description ul {
+            margin: 10px 0;
+        }
+        .flow-description li {
+            margin: 5px 0;
+        }
+        .key-step {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .alternative {
+            font-style: italic;
+            color: #8e44ad;
+        }
+        .characteristics {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-top: 30px;
+        }
+        .characteristics h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        .characteristics ol {
+            margin: 10px 0;
+        }
+        .characteristics li {
+            margin: 8px 0;
+        }
+        .mermaid {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Popcorn E-commerce Platform</h1>
+        <h2>Application Flow Sequence Diagrams</h2>
+        
+        <p>This document contains sequence diagrams for the key flows in the Popcorn e-commerce platform.</p>
+
+        <h2>1. 🔐 User Authentication Flow</h2>
+        <div class="diagram-container">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant UI as Frontend
+    participant API as NextAuth API
+    participant DB as Database
+    participant Auth as Auth Service
+
+    U->>UI: Enter email/password
+    UI->>API: POST /api/v1/auth/signin
+    API->>Auth: authorize(credentials)
+    Auth->>DB: findOne({email})
+    DB-->>Auth: user data
+    Auth->>Auth: comparePassword()
+    Auth-->>API: user object or null
+    API->>API: generate JWT token
+    API-->>UI: session data
+    UI->>UI: redirect to /dashboard
+    UI-->>U: Dashboard page
+            </div>
+        </div>
+
+        <div class="flow-description">
+            <h3>Authentication Process</h3>
+            <ul>
+                <li><span class="key-step">Credential Validation:</span> User enters email/password</li>
+                <li><span class="key-step">Database Lookup:</span> System finds user by email</li>
+                <li><span class="key-step">Password Verification:</span> bcryptjs compares hashed passwords</li>
+                <li><span class="key-step">Session Creation:</span> JWT token generated for authenticated user</li>
+                <li><span class="key-step">Redirect:</span> User redirected to dashboard on success</li>
+            </ul>
+        </div>
+
+        <h2>2. 🤖 AI Chat Flow</h2>
+        <div class="diagram-container">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant UI as Chat Widget
+    participant API as Chat API
+    participant AI as AI Service
+    participant PS as Product Service
+    participant CS as Conversation Service
+    participant MS as Message Service
+    participant DB as Database
+    participant OpenAI as OpenAI API
+
+    U->>UI: Type message
+    UI->>API: POST /api/v1/ai/chat
+    API->>API: validate session
+    API->>CS: create/find conversation
+    CS->>DB: save conversation
+    DB-->>CS: conversation data
+    CS-->>API: conversation object
+    API->>MS: create user message
+    MS->>DB: save user message
+    DB-->>MS: message data
+    MS-->>API: user message object
+    API->>AI: generateResponse()
+    AI->>PS: getProductCatalog()
+    PS->>DB: findAll products
+    DB-->>PS: products array
+    PS-->>AI: product catalog
+    AI->>OpenAI: chat.completions.create()
+    OpenAI-->>AI: AI response
+    alt Function Call (search_products)
+        AI->>PS: searchProducts(ids)
+        PS->>DB: find products by IDs
+        DB-->>PS: products array
+        PS-->>AI: products data
+        AI->>AI: format carousel content
+    end
+    AI-->>API: response with richContent
+    API->>MS: create AI message
+    MS->>DB: save AI message
+    DB-->>MS: message data
+    MS-->>API: AI message object
+    API->>CS: update lastMessageAt
+    CS->>DB: update conversation
+    API-->>UI: response with message & richContent
+    UI->>UI: render message & carousel
+    UI-->>U: Display AI response
+            </div>
+        </div>
+
+        <div class="flow-description">
+            <h3>AI Chat Process</h3>
+            <ul>
+                <li><span class="key-step">Message Processing:</span> User message saved to database</li>
+                <li><span class="key-step">AI Context:</span> Product catalog loaded for AI context</li>
+                <li><span class="key-step">OpenAI Integration:</span> GPT-4 processes message with function calling</li>
+                <li><span class="key-step">Product Search:</span> AI can search and display specific products</li>
+                <li><span class="key-step">Rich Content:</span> AI responses can include product carousels</li>
+                <li><span class="key-step">Conversation History:</span> All messages stored for context</li>
+            </ul>
+        </div>
+
+        <h2>3. 🛍️ Product Search and Display Flow</h2>
+        <div class="diagram-container">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant UI as Product Grid
+    participant API as Product API
+    participant PS as Product Service
+    participant DB as Database
+
+    U->>UI: Select category or search
+    UI->>UI: filter/sort products
+    UI->>API: GET /api/v1/products
+    API->>PS: findAll()
+    PS->>DB: SELECT * FROM products
+    DB-->>PS: products array
+    PS-->>API: products data
+    API-->>UI: products JSON
+    UI->>UI: render ProductCard components
+    UI-->>U: Display product grid
+            </div>
+        </div>
+
+        <div class="flow-description">
+            <h3>Product Display Process</h3>
+            <ul>
+                <li><span class="key-step">User Interaction:</span> Category selection or search query</li>
+                <li><span class="key-step">Client-side Filtering:</span> Products filtered and sorted in UI</li>
+                <li><span class="key-step">Database Query:</span> All products retrieved from database</li>
+                <li><span class="key-step">Component Rendering:</span> ProductCard components rendered for each product</li>
+            </ul>
+        </div>
+
+        <h2>4. 📝 User Registration Flow</h2>
+        <div class="diagram-container">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant UI as Signup Form
+    participant API as Auth API
+    participant Auth as Auth Service
+    participant UR as User Repository
+    participant DB as Database
+
+    U->>UI: Fill registration form
+    UI->>UI: validate form data
+    UI->>API: POST /api/v1/auth/signup
+    API->>Auth: validate input
+    Auth->>UR: findOne({email})
+    UR->>DB: SELECT * FROM users WHERE email
+    DB-->>UR: user or null
+    UR-->>Auth: user exists check
+    alt User exists
+        Auth-->>API: error: email already exists
+        API-->>UI: 400 error
+        UI-->>U: Show error message
+    else User doesn't exist
+        Auth->>Auth: hashPassword()
+        Auth->>UR: create(userData)
+        UR->>DB: INSERT INTO users
+        DB-->>UR: new user data
+        UR-->>Auth: user object
+        Auth-->>API: success
+        API-->>UI: 201 success
+        UI->>UI: redirect to signin
+        UI-->>U: Signin page
+    end
+            </div>
+        </div>
+
+        <div class="flow-description">
+            <h3>Registration Process</h3>
+            <ul>
+                <li><span class="key-step">Form Validation:</span> Client-side validation of registration data</li>
+                <li><span class="key-step">Email Uniqueness:</span> Check if email already exists</li>
+                <li><span class="alternative">If email exists:</span> Return error message</li>
+                <li><span class="alternative">If email unique:</span> Hash password and create user</li>
+                <li><span class="key-step">Success:</span> Redirect to signin page</li>
+            </ul>
+        </div>
+
+        <h2>5. 🏠 Dashboard Loading Flow</h2>
+        <div class="diagram-container">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant UI as Dashboard
+    participant Auth as NextAuth
+    participant API as User API
+    participant UC as User Controller
+    participant DB as Database
+
+    U->>UI: Navigate to /dashboard
+    UI->>Auth: useSession()
+    Auth->>Auth: validate JWT token
+    alt Valid session
+        Auth-->>UI: session data
+        UI->>UI: render dashboard components
+        UI->>API: GET /api/v1/users
+        API->>UC: getUsers()
+        UC->>DB: SELECT * FROM users
+        DB-->>UC: users array
+        UC-->>API: users data
+        API-->>UI: users JSON
+        UI-->>U: Complete dashboard
+    else Invalid session
+        Auth-->>UI: null session
+        UI->>UI: redirect to /auth/signin
+        UI-->>U: Signin page
+    end
+            </div>
+        </div>
+
+        <div class="flow-description">
+            <h3>Dashboard Loading Process</h3>
+            <ul>
+                <li><span class="key-step">Session Validation:</span> Check JWT token validity</li>
+                <li><span class="alternative">Valid Session:</span> Load dashboard with user data</li>
+                <li><span class="alternative">Invalid Session:</span> Redirect to signin page</li>
+                <li><span class="key-step">Data Loading:</span> Fetch user data for dashboard display</li>
+            </ul>
+        </div>
+
+        <h2>6. 🎠 Product Carousel Rendering Flow</h2>
+        <div class="diagram-container">
+            <div class="mermaid">
+sequenceDiagram
+    participant AI as AI Service
+    participant UI as Chat Widget
+    participant U as User
+
+    AI->>AI: searchProducts() function call
+    AI->>AI: format carousel content
+    AI-->>UI: response with richContent
+    UI->>UI: parse richContent JSON
+    UI->>UI: render product carousel
+    UI->>UI: display product cards
+    UI-->>U: Show product carousel
+    U->>UI: Click "Add to Cart"
+    UI->>UI: handleAddToCart()
+    UI->>UI: update cart state
+    UI-->>U: Product added to cart
+            </div>
+        </div>
+
+        <div class="flow-description">
+            <h3>Product Carousel Process</h3>
+            <ul>
+                <li><span class="key-step">AI Function Call:</span> AI calls search_products function</li>
+                <li><span class="key-step">Content Formatting:</span> AI formats product data as carousel</li>
+                <li><span class="key-step">Rich Content Rendering:</span> UI parses JSON and renders carousel</li>
+                <li><span class="key-step">User Interaction:</span> Users can add products to cart from carousel</li>
+            </ul>
+        </div>
+
+        <h2>7. 🗄️ Database Connection Flow</h2>
+        <div class="diagram-container">
+            <div class="mermaid">
+sequenceDiagram
+    participant App as Application
+    participant DB as Database Connection
+    participant MySQL as MySQL Server
+    participant TypeORM as TypeORM
+
+    App->>DB: dbConnection.connect()
+    DB->>TypeORM: create DataSource
+    TypeORM->>MySQL: establish connection
+    MySQL-->>TypeORM: connection established
+    TypeORM-->>DB: DataSource ready
+    DB-->>App: connection successful
+    App->>DB: getDataSource()
+    DB-->>App: DataSource instance
+    App->>TypeORM: execute queries
+    TypeORM->>MySQL: SQL queries
+    MySQL-->>TypeORM: query results
+    TypeORM-->>App: entity objects
+            </div>
+        </div>
+
+        <div class="flow-description">
+            <h3>Database Connection Process</h3>
+            <ul>
+                <li><span class="key-step">Connection Initialization:</span> TypeORM DataSource created</li>
+                <li><span class="key-step">MySQL Connection:</span> Connection established to MySQL server</li>
+                <li><span class="key-step">Query Execution:</span> TypeORM handles SQL queries and entity mapping</li>
+                <li><span class="key-step">Result Mapping:</span> Database results mapped to TypeScript entities</li>
+            </ul>
+        </div>
+
+        <div class="characteristics">
+            <h3>🔧 Key Flow Characteristics</h3>
+            <ol>
+                <li><strong>Authentication:</strong> Uses NextAuth with JWT tokens and database validation</li>
+                <li><strong>AI Integration:</strong> Real-time chat with OpenAI GPT-4 and function calling</li>
+                <li><strong>Rich Content:</strong> AI responses can include product carousels with images</li>
+                <li><strong>Database:</strong> TypeORM with MySQL for all data persistence</li>
+                <li><strong>Real-time Updates:</strong> Chat interface updates immediately with AI responses</li>
+                <li><strong>Error Handling:</strong> Comprehensive error handling at each layer</li>
+                <li><strong>Session Management:</strong> Persistent sessions with automatic token refresh</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#3498db',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#2980b9',
+                lineColor: '#34495e',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f8f9fa'
+            }
+        });
+    </script>
+</body>
+</html>

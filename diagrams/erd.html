@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popcorn E-commerce - Database ERD</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        .diagram-container {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+        .entity-description {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+        .entity-description h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .entity-description ul {
+            margin: 10px 0;
+        }
+        .entity-description li {
+            margin: 5px 0;
+        }
+        .key-field {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .relationship {
+            font-style: italic;
+            color: #27ae60;
+        }
+        .design-patterns {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin-top: 30px;
+        }
+        .design-patterns h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        .design-patterns ol {
+            margin: 10px 0;
+        }
+        .design-patterns li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏪 Popcorn E-commerce Platform</h1>
+        <h2>Database Entity Relationship Diagram (ERD)</h2>
+        
+        <div class="diagram-container">
+            <div class="mermaid">
+erDiagram
+    ROLES {
+        int id PK
+        string name UK
+        string description
+        boolean isActive
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    USERS {
+        int id PK
+        string email UK
+        string password
+        string firstName
+        string lastName
+        string phone
+        boolean isActive
+        int roleId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    PRODUCTS {
+        int id PK
+        string name
+        text description
+        decimal price
+        string category
+        string imageUrl
+        string tags
+        boolean inStock
+        decimal weight
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    CONVERSATIONS {
+        int id PK
+        string title
+        string type
+        boolean isActive
+        datetime lastMessageAt
+        int userId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    MESSAGES {
+        int id PK
+        text content
+        string type
+        string senderType
+        string fileUrl
+        string fileName
+        boolean isEdited
+        datetime editedAt
+        string aiModel
+        int userId FK
+        string senderName
+        string senderAvatar
+        json richContent
+        string templateType
+        string metadata
+        int conversationId FK
+        datetime createdAt
+        datetime updatedAt
+        datetime deletedAt
+    }
+
+    %% Relationships
+    ROLES ||--o{ USERS : "has many"
+    USERS ||--o{ CONVERSATIONS : "creates"
+    USERS ||--o{ MESSAGES : "sends"
+    CONVERSATIONS ||--o{ MESSAGES : "contains"
+            </div>
+        </div>
+
+        <h2>📋 Entity Descriptions</h2>
+
+        <div class="entity-description">
+            <h3>🔐 ROLES</h3>
+            <p><strong>Purpose:</strong> Defines user roles and permissions</p>
+            <ul>
+                <li><span class="key-field">name</span>: Unique role identifier (e.g., 'admin', 'customer')</li>
+                <li><span class="key-field">isActive</span>: Controls role availability</li>
+            </ul>
+            <p><span class="relationship">Relationships:</span> One-to-many with USERS</p>
+        </div>
+
+        <div class="entity-description">
+            <h3>👤 USERS</h3>
+            <p><strong>Purpose:</strong> Stores user account information and authentication data</p>
+            <ul>
+                <li><span class="key-field">email</span>: Unique identifier for login</li>
+                <li><span class="key-field">password</span>: Hashed password for authentication</li>
+                <li><span class="key-field">firstName, lastName</span>: User's personal information</li>
+                <li><span class="key-field">roleId</span>: Foreign key linking to user's role</li>
+            </ul>
+            <p><span class="relationship">Relationships:</span> 
+                Many-to-one with ROLES, One-to-many with CONVERSATIONS, One-to-many with MESSAGES
+            </p>
+        </div>
+
+        <div class="entity-description">
+            <h3>🛍️ PRODUCTS</h3>
+            <p><strong>Purpose:</strong> Product catalog for the e-commerce platform</p>
+            <ul>
+                <li><span class="key-field">name</span>: Product name</li>
+                <li><span class="key-field">description</span>: Detailed product description</li>
+                <li><span class="key-field">price</span>: Product price (decimal with 2 decimal places)</li>
+                <li><span class="key-field">category</span>: Product category (clothes, drinks, laptop, etc.)</li>
+                <li><span class="key-field">imageUrl</span>: Product image URL</li>
+                <li><span class="key-field">tags</span>: Comma-separated tags for search</li>
+                <li><span class="key-field">inStock</span>: Availability status</li>
+            </ul>
+            <p><span class="relationship">Relationships:</span> Referenced by AI service for product recommendations</p>
+        </div>
+
+        <div class="entity-description">
+            <h3>💬 CONVERSATIONS</h3>
+            <p><strong>Purpose:</strong> Manages AI chat sessions between users and the system</p>
+            <ul>
+                <li><span class="key-field">title</span>: Conversation title (auto-generated from first message)</li>
+                <li><span class="key-field">type</span>: Conversation type (default: 'assistant')</li>
+                <li><span class="key-field">isActive</span>: Whether conversation is still active</li>
+                <li><span class="key-field">lastMessageAt</span>: Timestamp of last message for sorting</li>
+                <li><span class="key-field">userId</span>: Owner of the conversation</li>
+            </ul>
+            <p><span class="relationship">Relationships:</span> 
+                Many-to-one with USERS, One-to-many with MESSAGES
+            </p>
+        </div>
+
+        <div class="entity-description">
+            <h3>📝 MESSAGES</h3>
+            <p><strong>Purpose:</strong> Individual messages within conversations (both user and AI messages)</p>
+            <ul>
+                <li><span class="key-field">content</span>: Message text content</li>
+                <li><span class="key-field">senderType</span>: 'user', 'ai', or 'system'</li>
+                <li><span class="key-field">type</span>: Message type ('text', 'carousel', 'action_buttons')</li>
+                <li><span class="key-field">richContent</span>: JSON data for complex content (product carousels)</li>
+                <li><span class="key-field">templateType</span>: Template type for rendering</li>
+                <li><span class="key-field">metadata</span>: Additional JSON metadata</li>
+                <li><span class="key-field">aiModel</span>: AI model used for generation</li>
+                <li><span class="key-field">userId</span>: User who sent the message (null for AI messages)</li>
+            </ul>
+            <p><span class="relationship">Relationships:</span> 
+                Many-to-one with USERS (optional, for user messages), Many-to-one with CONVERSATIONS
+            </p>
+        </div>
+
+        <div class="design-patterns">
+            <h3>🏗️ Key Design Patterns</h3>
+            <ol>
+                <li><strong>Soft Delete:</strong> All entities extend BaseEntity with <code>deletedAt</code> field</li>
+                <li><strong>Audit Trail:</strong> All entities have <code>createdAt</code> and <code>updatedAt</code> timestamps</li>
+                <li><strong>Rich Content:</strong> Messages support JSON content for AI-generated product carousels</li>
+                <li><strong>Flexible Messaging:</strong> Support for different message types and sender types</li>
+                <li><strong>Role-Based Access:</strong> Users are linked to roles for permission management</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#3498db',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#2980b9',
+                lineColor: '#34495e',
+                secondaryColor: '#ecf0f1',
+                tertiaryColor: '#f8f9fa'
+            }
+        });
+    </script>
+</body>
+</html>

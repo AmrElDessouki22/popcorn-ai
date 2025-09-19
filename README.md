@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Popcorn - Next.js TypeScript Project
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+This is a modern Next.js application with TypeScript, MySQL (TypeORM), and NextAuth authentication.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Documentation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+You will find the diagrams (ERD and Sequence diagrams) under the `diagrams` folder. You need to open them as HTML to see the Mermaid style.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Live Demo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To try the project, please visit: [http://64.227.120.10/](http://64.227.120.10/)
 
-## Learn More
+## User Authentication
 
-To learn more about Next.js, take a look at the following resources:
+### Create New User
+You can create a new user account. Make sure to use a strong password with:
+- 1 uppercase letter
+- 1 special character
+- 1 number
+- Minimum length requirement
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Test Account
+Or use the provided test account:
+- **Email:** popcorn@test.com
+- **Password:** 3;3V7&£^Bmer
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Products
 
-## Deploy on Vercel
+The products section is currently empty and will be updated later.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technology Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Frontend:** Next.js 15, React 19, TypeScript
+- **Backend:** Next.js API Routes
+- **Database:** MySQL with TypeORM
+- **Authentication:** NextAuth.js
+- **Styling:** Tailwind CSS
+- **Deployment:** Docker, Docker Compose
