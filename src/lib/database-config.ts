@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { User } from '@/models/User';
 import { Product } from '@/models/Product';
@@ -15,5 +16,8 @@ export const AppDataSource = new DataSource({
   synchronize: false, // We'll use migrations instead
   logging: process.env.NODE_ENV === 'development',
   entities: [User, Product, Role, Conversation, Message],
+  // Remove migrations and subscribers paths to avoid path resolution issues
+  // migrations: [path.join(process.cwd(), "src/migrations/**/*.{ts,js}")],
+  // subscribers: [path.join(process.cwd(), "src/subscribers/**/*.{ts,js}")],
   connectorPackage: 'mysql2',
 });

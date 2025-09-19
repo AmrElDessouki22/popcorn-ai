@@ -17,11 +17,17 @@ export class DatabaseConnection {
   public async connect(): Promise<void> {
     if (!this.isConnected) {
       try {
+        console.log('Initializing database connection...');
+        
         await AppDataSource.initialize();
         this.isConnected = true;
+        
         console.log('Database connection established successfully');
+        console.log('Connected entities:', AppDataSource.entityMetadatas.map(meta => meta.name));
+        console.log('Message entity metadata:', AppDataSource.entityMetadatas.find(meta => meta.name === 'Message'));
       } catch (error) {
         console.error('Error during database connection:', error);
+        console.error('Entity metadata available:', AppDataSource.entityMetadatas.length);
         throw error;
       }
     }

@@ -23,8 +23,14 @@ const nextConfig: NextConfig = {
         'ioredis': 'commonjs ioredis',
         'redis': 'commonjs redis',
         'mongodb': 'commonjs mongodb',
-        'typeorm': 'commonjs typeorm',
+        // Remove typeorm from externals to ensure entity metadata is bundled
+        // 'typeorm': 'commonjs typeorm',
       });
+      
+      // Disable minification for server-side builds to preserve class names
+      if (config.optimization) {
+        config.optimization.minimize = false;
+      }
     }
     return config;
   },

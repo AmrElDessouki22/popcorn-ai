@@ -13,10 +13,8 @@ export class AIService {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.productService = null as any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.messageService = null as any;
+    this.productService = new ProductService();
+    this.messageService = new MessageService();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,8 +28,6 @@ export class AIService {
     richContent?: any; 
     type?: string }> {
     try {
-      this.productService = new ProductService();
-      this.messageService = new MessageService();
       
       const conversationHistory = await this.getConversationHistory(conversationId);
       
